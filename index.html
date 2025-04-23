@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Feliz Cumpleaños y Aniversario, Amor!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        /* Estilos personalizados para el cuestionario y la página principal */
+        body {
+            font-family: 'Dancing Script', cursive;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f0fb;
+            color: #e91e63;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #quiz-container, #main-content, #files-page { /* Agregamos #files-page al selector */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding: 2rem 0;
+            box-sizing: border-box;
+        }
+
+        #quiz-container {
+            background-color: #f8f0fb;
+        }
+        #main-content {
+            background-color: #fff;
+        }
+        #files-page { /* Estilos para la página de archivos */
+            background-color: #f8f0fb; /* Color de fondo para la página de archivos */
+        }
+
+        .question-container {
+            background-color: #fce4ec;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .question-container h2 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: #e91e63;
+        }
+
+        .answer-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .answer-option {
+            padding: 1rem 2rem;
+            margin: 0.5rem 0;
+            background-color: #fff;
+            border: 0.125rem solid #e91e63;
+            border-radius: 1rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 1.2rem;
+            color: #e91e63;
+        }
+
+        .answer-option:hover {
+            background-color: #f48fb1;
+            transform: scale(1.05);
+            border-color: #f48fb1;
+            color: #fff;
+        }
+
+        .answer-option.selected {
+            background-color: #e91e63;
+            color: #fff;
+            border-color: #e91e63;
+        }
+
+        #quiz-results {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            background-color: #fce4ec;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            margin-top: 2rem;
+        }
+
+        #quiz-results h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #e91e63;
+        }
+
+        #quiz-results p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: #e91e63;
+        }
+
+        #quiz-results button {
+            padding: 1rem 2rem;
+            background-color: #e91e63;
+            color: #fff;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        #quiz-results button:hover {
+            background-color: #c2185b;
+            transform: scale(1.05);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #main-content {
+            padding-top: 0;
+            padding-bottom: 3rem;
+        }
+
+        #main-content h1 {
+            font-size: 3rem;
+            color: #e91e63;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        #love-phrases {
+            margin-bottom: 2rem;
+            text-align: center;
+            font-size: 1.5rem;
+            color: #e91e63;
+            padding: 0 1rem;
+        }
+
+        #photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            width: 95%;
+            max-width: 800px;
+        }
+
+        .photo-item {
+            width: 100%;
+            max-width: 250px;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover {
+            transform: scale(1.05);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #video-gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            width: 95%;
+            max-width: 800px;
+        }
+
+        #video-gallery video {
+            width: 100%;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        .heart-animation, .star-animation, .panda-animation, .penguin-animation {
+            position: fixed;
+            font-size: 1.5rem;
+            color: #e91e63;
+            animation: floatAndRotate 5s infinite, pulse 2s infinite alternate, colorChange 3s infinite;
+            top: 80%;
+            left: 45%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .heart-animation {
+            animation-delay: 0s;
+        }
+        .star-animation {
+            color: #ffc107;
+            animation-delay: 1s;
+        }
+        .panda-animation {
+            font-size: 2rem;
+            color: #a9a9a9;
+            animation-delay: 2s;
+        }
+        .penguin-animation {
+            font-size: 2rem;
+            color: #000000;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes floatAndRotate {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-50px) rotate(180deg);
+                opacity: 0.9;
+            }
+            80% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        @keyframes colorChange {
+            0% { color: #e91e63; }
+            33% { color: #f06292; }
+            66% { color: #c2185b; }
+            100% { color: #e91e63; }
+        }
+
+        #final-message {
+            font-size: 2rem;
+            color: #e91e63;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .question-container, #quiz-results {
+                width: 95%;
+            }
+            .answer-option {
+                width: 100%;
+                max-width: 300px;
+            }
+            #photo-gallery {
+                gap: 0.5rem;
+            }
+            .photo-item {
+                max-width: 100%;
+            }
+             #video-gallery video{
+                max-width: 100%;
+            }
+            #main-content h1{
+                font-size: 2.5rem;
+            }
+            #love-phrases{
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Estilos para el preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8f0fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .loader {
+            border: 0.375rem solid #f3e5f5;
+            border-top: 0.375rem solid #e91e63;
+            border-radius: 50%;
+            width: 3rem;
+            height: 3rem;
+            animation: spin 2s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .material-icons.heart {
+            font-size: 3rem;
+            color: #e91e63;
+        }
+        .material-icons.star {
+            font-size: 2rem;
+            color: #ffc107;
+        }
+        .material-icons.panda {
+            font-size: 3rem;
+            color: #a9a9a9;
+        }
+         .material-icons.penguin {
+            font-size: 3rem;
+            color: #000000;
+        }
+
+        #header-image {
+            width: 80%;
+            max-width: 400px;
+            margin: 3rem 0 2rem;
+            background-color: #fff;
+            overflow: hidden;
+            clip-path: url(#heart-shape);
+            -webkit-clip-path: url(#heart-shape);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+
+        #header-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #files-page { /* Estilos para la página de archivos */
+            display: none; /* Inicialmente oculta */
+            padding-top: 2rem;
+        }
+
+        #files-page h2 {
+            font-size: 2rem;
+            color: #e91e63;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        #files-page ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            width: 90%;
+            max-width: 600px;
+        }
+
+        #files-page li {
+            background-color: #fff;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.05);
+            border: 0.125rem solid #fce4ec;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #files-page li:hover {
+            background-color: #f48fb1;
+            transform: scale(1.02);
+            border-color: #f48fb1;
+            color: #fff;
+        }
+
+        #files-page li a {
+            color: #e91e63;
+            text-decoration: none;
+            font-size: 1.1rem;
+            display: block;
+        }
+
+        #files-page li a:hover {
+            color: #fff;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+        }
+        .nav-button{
+             padding: 1rem 2rem;
+            background-color: #e91e63;
+            color: #fff;
+            border: none;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 1rem;
+        }
+        .nav-button:hover {
+            background-color: #c2185b;
+            transform: scale(1.05);
+        }
+
+        #photo-gallery-title {
+            font-size: 2rem;
+            color: #e91e63;
+            text-align: center;
+            margin: 2rem 0 1rem;
+        }
+
+        .photo-caption {
+            text-align: center;
+            margin-top: 0.5rem;
+            font-size: 1rem;
+            color: #d81b60;
+        }
+        .photo-caption span {
+            display: block;
+            font-size: 0.9rem;
+            color: #ad1457;
+        }
+
+    </style>
+</head>
+
+<svg width="0" height="0">
+  <defs>
+    <clipPath id="heart-shape" clipPathUnits="objectBoundingBox">
+      <path d="M0.5,0.9 C0.1,0.6 0,0.3 0.25,0.1 C0.4,0 0.5,0.1 0.5,0.2 C0.5,0.1 0.6,0 0.75,0.1 C1,0.3 0.9,0.6 0.5,0.9 Z" />
+    </clipPath>
+  </defs>
+</svg>
+
+<body>
+    <div id="preloader">
+        <div class="loader"></div>
+    </div>
+    <div class="main-container">
+        <div id="quiz-container" class="hidden">
+            <div class="question-container">
+                <h2>Pregunta 1:</h2>
+                <p>¿Te gusta que te sorprenda con detalles inesperados?</p>
+                <div class="answer-options">
+                    <div class="answer-option" data-answer="si">Obvio</div>
+                    <div class="answer-option" data-answer="no">Ño</div>
+                </div>
+            </div>
+            <div class="question-container hidden">
+                <h2>Pregunta 2:</h2>
+                <p>¿Crees que nuestra conexión es algo especial y única?</p>
+                <div class="answer-options">
+                    <div class="answer-option" data-answer="si">Chi</div>
+                    <div class="answer-option" data-answer="no">Ño</div>
+                </div>
+            </div>
+            <div class="question-container hidden">
+                <h2>Pregunta 3:</h2>
+                <p>¿Te emociona la idea de celebrar muchos aniversarios más juntos?</p>
+                <div class="answer-options">
+                    <div class="answer-option" data-answer="si">Chi 🥰</div>
+                    <div class="answer-option" data-answer="no">No 😟</div>
+                </div>
+            </div>
+            <div id="quiz-results" class="hidden">
+                <h2>¡Resultados del Quiz!</h2>
+                <p>¡Descubriremos cuánto nos conocemos y celebramos nuestro amor!</p>
+                <button id="show-love-message">Ver Sorpresa</button>
+            </div>
+        </div>
+
+        <div id="main-content" class="hidden">
+            <div id="header-image">
+                <img src="images/pulseras.jpg" alt="Foto de nosotros en forma de corazón">
+            </div>
+            <h1>Feliz Cumpleaños y 10 Aniversario, Mi Amor</h1>
+            <div id="love-phrases">
+                <p>Cada día a tu lado fue, es y será un regalo. ¡Feliz Cumpleaños y Aniversario!</p>
+                <p>Tu amor es la melodía que llena mi corazón de alegría.</p>
+                <p>En cada foto, en cada recuerdo, veo la magia de nuestro amor y lo mucho que hemos crecido juntos.</p>
+                <p>Que este día y cada día estén llenos de paz y amor.</p>
+            </div>
+            <h2 id="photo-gallery-title">Nuestros recuerdos 🥰❤</h2>
+            <div id="photo-gallery">
+                </div>
+            <p style="font-size: 1.2rem; color: #e91e63; text-align: center; margin-bottom: 1.5rem; padding-left: 1rem; padding-right: 1rem;">
+                Recuerda siempre lo mucho que te amo y que siempre te llevo en mi corazón y en mi muñeca ❤
+            </p>
+            <div class="nav-buttons">
+                <button class = "nav-button" id="show-files"><a href="https://call.whatsapp.com/video/vgoFjRrErF3gkBPveIJ8lI" target="_blank" class="nav-button">¿Me extrañaste?</a></button>
+            </div>
+
+            
+             <i class="material-icons heart heart-animation">favorite</i>
+            <i class="material-icons heart heart-animation" style="left: 10%; animation-delay: 4s;">favorite</i>
+            <i class="material-icons heart heart-animation" style="left: 70%; animation-delay: 2s;">favorite</i>
+            <i class="material-icons heart heart-animation" style="left: 25%; animation-delay: 5s;">favorite</i>
+            <i class="material-icons heart heart-animation" style="left: 90%; animation-delay: 1.5s;">favorite</i>
+            <i class="material-icons star star-animation" style="top: 20%; left: 30%; animation-delay: 1.5s; color: #ffdb58;">star</i>
+            <i class="material-icons star star-animation" style="top: 50%; left: 60%; animation-delay: 2.5s; color: #ffe599;">star</i>
+            <i class="material-icons star star-animation" style="top: 10%; left: 80%; animation-delay: 0.8s; color: #ffc107;">star</i>
+            <i class="material-icons panda panda-animation" style="top: 10%; left: 35%; animation-delay: 5s;">&#128059;</i>
+            <i class="material-icons penguin penguin-animation" style="top: 60%; left: 15%; animation-delay: 4.2s;">&#128039;</i>
+            <i class="material-icons panda panda-animation" style="top: 40%; left: 75%; animation-delay: 5.8s;">&#128059;</i>
+        </div>
+
+        <div id="files-page" class="hidden">
+            <h2>Nuestros Recuerdos</h2>
+            <ul>
+                <li><a href="archivos/foto1.jpg">Foto 1: Primer Encuentro</a></li>
+                <li><a href="archivos/carta2.pdf">Carta 2: Declaración de Amor</a></li>
+                <li><a href="archivos/video3.mp4">Video 3: Primer Viaje Juntos</a></li>
+                 <li><a href="archivos/foto4.jpg">Foto 4: Nuestro Aniversario 2022</a></li>
+                <li><a href="archivos/carta5.pdf">Carta 5: Promesa de Amor Eterno</a></li>
+                <li><a href="archivos/video6.mp4">Video 6: Momentos Inolvidables</a></li>
+            </ul>
+            <div class="nav-buttons">
+                 <button class = "nav-button" id="show-main">Volver a la Página Principal</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Variables ---
+        const quizContainer = document.getElementById('quiz-container');
+        const mainContent = document.getElementById('main-content');
+        const questionContainers = document.querySelectorAll('.question-container');
+        const answerOptions = document.querySelectorAll('.answer-option');
+        const quizResults = document.getElementById('quiz-results');
+        const showLoveMessageButton = document.getElementById('show-love-message');
+        const photoGallery = document.getElementById('photo-gallery');
+        const videoGallery = document.getElementById('video-gallery');
+        const preloader = document.getElementById('preloader');
+        const filesPage = document.getElementById('files-page'); // Nueva variable para la página de archivos
+        const showFilesButton = document.getElementById('show-files'); // Botón para mostrar archivos
+        const showMainButton = document.getElementById('show-main');
+        let currentQuestion = 0;
+        let correctAnswers = 0;
+        let quizCompleted = false;
+
+        // --- Datos de las fotos y videos ---
+        const photos = [
+            { src: 'images/photo1.jpg', alt: 'Foto 1 juntos' },
+            { src: 'images/photo2.jpg', alt: 'Foto 2 juntos' },
+            { src: 'images/photo3.jpg', alt: 'Foto 3 juntos' },
+            { src: 'images/photo4.jpg', alt: 'Foto 4 juntos' },
+            { src: 'images/photo5.jpg', alt: 'Foto 5 juntos' },
+            { src: 'images/photo6.jpg', alt: 'Foto 6 juntos' },
+        ];
+
+        const audio = new Audio('audio/love_song.mp3'); // Ruta del archivo de audio
+
+        // --- Funciones ---
+
+        // Función para mostrar la siguiente pregunta
+        function showNextQuestion() {
+            questionContainers[currentQuestion].classList.add('hidden');
+            currentQuestion++;
+            if (currentQuestion < questionContainers.length) {
+                questionContainers[currentQuestion].classList.remove('hidden');
+            } else {
+                showQuizResults();
+            }
+        }
+
+        // Función para mostrar los resultados del quiz
+        function showQuizResults() {
+            quizContainer.classList.add('hidden');
+            quizResults.classList.remove('hidden');
+            quizCompleted = true;
+        }
+
+        // Función para mostrar el mensaje de amor y la galería
+        function showLoveMessage() {
+            quizResults.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            loadPhotosAndVideos();
+        }
+
+        // Función para cargar las fotos y videos
+        function loadPhotosAndVideos() {
+            const photoData = [
+                { src: 'images/photo1.jpg', alt: 'Foto 1 juntos', phrase: 'Nuestra primera escapada', date: '25 de Mayo 2024' },
+                { src: 'images/photo2.jpg', alt: 'Foto 2 juntos', phrase: 'Nuestro primer antojo', date: '6 de Junio 2024' },
+                { src: 'images/photo3.jpg', alt: 'Foto 3 juntos', phrase: 'Nuestra primera foto en el gym', date: '10 de Junio 2024' },
+                { src: 'images/photo4.jpg', alt: 'Foto 4 juntos', phrase: 'Mi foto favorita', date: '22 de Junio 2024' },
+                { src: 'images/photo5.jpg', alt: 'Foto 5 juntos', phrase: '¿Recuerdas este día?', date: '29 de Junio 2024' },
+                { src: 'images/photo6.jpg', alt: 'Foto 6 juntos', phrase: 'Nuestro primer viaje juntos', date: '11 de Julio 2024' },
+                { src: 'images/photo7.jpg', alt: 'Foto 7 juntos', phrase: 'Nuestra primera cena', date: '20 de Julio 2024' },
+                { src: 'images/photo8.jpg', alt: 'Foto 8 juntos', phrase: 'Mis días favoritos (Cine)', date: '25 de Julio 2024' },
+                { src: 'images/photo9.jpg', alt: 'Foto 9 juntos', phrase: 'El día que tuve que partir', date: '27 de Julio 2024' },
+                { src: 'images/photo10.jpg', alt: 'Foto 10 juntos', phrase: 'Nuestros detalles - 1', date: '21 de Septiembre 2024' },
+                { src: 'images/photo11.jpg', alt: 'Foto 11 juntos', phrase: 'Nuestros detalles - 2', date: '24 de Septiembre 2024' },
+                { src: 'images/photo12.jpg', alt: 'Foto 12 juntos', phrase: 'Nuestras citas', date: '26 de Octubre 2024' },
+                { src: 'images/photo13.jpg', alt: 'Foto 13 juntos', phrase: 'Mas detallitos', date: '12 de Noviembre 2024' },
+                { src: 'images/photo14.jpg', alt: 'Foto 14 juntos', phrase: 'Mi bebé preciosa', date: '22 de Noviembre 2024' },
+                { src: 'images/photo15.jpg', alt: 'Foto 15 juntos', phrase: 'Un día que nunca olvidaremos', date: '12 de Diciembre 2024' },
+                { src: 'images/photo16.jpg', alt: 'Foto 16 juntos', phrase: 'Nuestro primer año nuevo', date: '31 de Diciembre 2024' },
+                { src: 'images/photo17.jpg', alt: 'Foto 17 juntos', phrase: 'Tu titulación', date: '9 de Enero 2025' },
+                { src: 'images/photo18.jpg', alt: 'Foto 18 juntos', phrase: 'Me encanta tu sonrisa', date: '24 de Enero 2025' },
+                { src: 'images/photo19.jpg', alt: 'Foto 19 juntos', phrase: 'Gorditos y bonitos - 1', date: '11 de Febrero 2025' },
+                { src: 'images/photo20.jpg', alt: 'Foto 20 juntos', phrase: 'Gorditos y bonitos - 2', date: '18 de Febrero 2025' },
+                { src: 'images/photo21.jpg', alt: 'Foto 21 juntos', phrase: 'Nuestro último viaje juntos', date: '1 de Marzo 2025' },
+            ];
+
+            photoData.forEach(photo => {
+                const photoItem = document.createElement('div');
+                photoItem.classList.add('photo-item');
+                photoItem.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.alt}">
+                    <div class="photo-caption">${photo.phrase}<span>${photo.date}</span></div>
+                `;
+                photoGallery.appendChild(photoItem);
+            });
+        }
+
+        // --- Event Listeners ---
+
+        // Event listener para las opciones de respuesta
+        answerOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                const selectedAnswer = this.dataset.answer;
+                if (selectedAnswer === 'si') {
+                    correctAnswers++;
+                }
+                this.classList.add('selected');
+                setTimeout(showNextQuestion, 500);
+            });
+        });
+
+        // Event listener para el botón de ver mensaje de amor
+        showLoveMessageButton.addEventListener('click', showLoveMessage);
+
+        // Event listener para mostrar la página de archivos
+        showFilesButton.addEventListener('click', function() {
+            mainContent.classList.add('hidden');
+            filesPage.classList.remove('hidden');
+             audio.pause();
+        });
+
+        // Event listener para volver a la página principal
+        showMainButton.addEventListener('click', function() {
+            filesPage.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            audio.play();
+        });
+
+        // --- Inicialización ---
+        window.addEventListener('load', () => {
+        setTimeout(() => {
+            preloader.style.display = 'none';
+            quizContainer.classList.remove('hidden');
+            alert("¡Bebé, sube el volumen!");
+
+            // Esperar interacción del usuario para reproducir audio
+            const startAudio = () => {
+                audio.play().catch(err => console.log("Error al reproducir audio:", err));
+                window.removeEventListener('click', startAudio);
+            };
+
+            window.addEventListener('click', startAudio);
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
